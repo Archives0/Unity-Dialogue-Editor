@@ -11,8 +11,9 @@ namespace RPG.Dialogue.Editor
     public class DialogueEditor : EditorWindow
     {
         Dialogue selectedDialogue = null;
-        bool dragging = false;
+        DialogueNode draggingNode;
         GUIStyle nodeStyle;
+        Vector2 draggingOffset;
 
         [MenuItem("Window/Dialogue Editor")]                                // Add to "Window" tab.
         public static void ShowEditorWindow()                               // Opens custom editor.
@@ -74,19 +75,22 @@ namespace RPG.Dialogue.Editor
 
         private void ProcessEvents()
         {
-            if(Event.current.type == EventType.MouseDown && !dragging)                          // Mouse down.
+            if(Event.current.type == EventType.MouseDown && draggingNode == null)                          // Mouse down.
             {
-                dragging = true;
+                draggingNode = selectedDialogue.GetNodeAtPoint(Event.current.mousePosition);
+                
+                if(draggingNode != null)
+                    draggingOffset = draggingNode.rect.position - Event.current.mousePosition;
             }
-            else if(Event.current.type == EventType.MouseDrag && dragging)                      // Mouse dragging.
+            else if(Event.current.type == EventType.MouseDrag && draggingNode != null)                      // Mouse dragging.
             {
                 Undo.RecordObject(selectedDialogue, "Updated node position");
-                selectedDialogue.GetRootNode().rect.position = Event.current.mousePosition;
+                draggingNode.rect.position = Event.current.mousePosition + draggingOffset;
                 GUI.changed = true;
             }
-            else if(Event.current.type == EventType.MouseUp && dragging)                        // Mouse up.
+            else if(Event.current.type == EventType.MouseUp && draggingNode != null)                        // Mouse up.
             {
-                dragging = false;
+                draggingNode = null;
             }
         }
 

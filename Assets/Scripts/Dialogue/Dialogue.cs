@@ -30,5 +30,18 @@ namespace RPG.Dialogue
         {
             return nodes[0];
         }
+
+        public DialogueNode GetNodeAtPoint(Vector2 mousePos)
+        {
+            DialogueNode pointNode = null;
+
+            foreach(DialogueNode node in nodes)
+            {
+                if(node.rect.Contains(mousePos))
+                    pointNode = node;
+            }
+
+            return pointNode;
+        }
     }
 }
