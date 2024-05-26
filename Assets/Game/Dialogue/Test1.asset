@@ -16,20 +16,31 @@ MonoBehaviour:
   - nodeID: 01
     nodeText: Test number 1
     textColor: {r: 0, g: 0, b: 0, a: 0}
-    childNodes: []
+    childNodes:
+    - 011
     rect:
       serializedVersion: 2
-      x: 297.2
-      y: 260.8
+      x: 344.2
+      y: 120.8
       width: 200
-      height: 100
+      height: 150
   - nodeID: 011
-    nodeText: Test number 1
+    nodeText: Test number 1.1
     textColor: {r: 0, g: 0, b: 0, a: 0}
     childNodes: []
     rect:
       serializedVersion: 2
-      x: 0
-      y: 0
+      x: 54.59996
+      y: 99.400024
+      width: 200
+      height: 100
+  - nodeID: 012
+    nodeText: Test number 1.2
+    textColor: {r: 0, g: 0, b: 0, a: 0}
+    childNodes: []
+    rect:
+      serializedVersion: 2
+      x: 640.6
+      y: 87.400024
       width: 200
       height: 100

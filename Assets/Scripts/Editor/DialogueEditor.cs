@@ -98,7 +98,7 @@ namespace RPG.Dialogue.Editor
         {
             GUILayout.BeginArea(node.rect, nodeStyle);                          // Start node boundary.
 
-            EditorGUILayout.LabelField("Node:");
+            EditorGUILayout.LabelField("Node:" + node.nodeID);
             EditorGUI.BeginChangeCheck();                                           // Start change log.
             string newID = EditorGUILayout.TextField(node.nodeID);
             string newText = EditorGUILayout.TextField(node.nodeText);
@@ -108,6 +108,12 @@ namespace RPG.Dialogue.Editor
                 Undo.RecordObject(selectedDialogue, "Update dialogue text");
                 node.nodeText = newText;
                 node.nodeID = newID;
+            }
+
+            foreach(DialogueNode childNode in selectedDialogue.GetAllChildren(node))
+            {
+                EditorGUILayout.LabelField(childNode.nodeID);
+                EditorGUILayout.LabelField(childNode.nodeText);
             }
 
             GUILayout.EndArea();                                                   // End node boundary.

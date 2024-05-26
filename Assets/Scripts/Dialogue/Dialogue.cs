@@ -10,6 +10,7 @@ namespace RPG.Dialogue
     public class Dialogue : ScriptableObject
     {
         [SerializeField] List<DialogueNode> nodes = new List<DialogueNode>();
+        Dictionary<string, DialogueNode> nodeRegistry = new Dictionary<string, DialogueNode>();
 
 #if UNITY_EDITOR                                        // If in Unity editor, not runtime.
         private void Awake()
@@ -18,8 +19,20 @@ namespace RPG.Dialogue
             {
                 nodes.Add(new DialogueNode());
             }
+
+            OnValidate();
         }
 #endif
+
+        private void OnValidate()
+        {
+            nodeRegistry.Clear();
+
+            foreach(DialogueNode node in GetAllNodes())
+            {
+                nodeRegistry[node.nodeID] = node;
+            }
+        }
 
         public IEnumerable<DialogueNode> GetAllNodes()
         {
@@ -42,6 +55,19 @@ namespace RPG.Dialogue
             }
 
             return pointNode;
+        }
+
+        public IEnumerable<DialogueNode> GetAllChildren(DialogueNode parentNode)
+        {
+            List<DialogueNode> childNodes = new List<DialogueNode>();
+
+            foreach(string child in parentNode.childNodes)
+            {
+                if(nodeRegistry.ContainsKey(child))
+                    childNodes.Add(nodeRegistry[child]);
+            }
+
+            return childNodes;
         }
     }
 }
