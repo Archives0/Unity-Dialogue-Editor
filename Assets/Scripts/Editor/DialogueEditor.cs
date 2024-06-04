@@ -65,10 +65,14 @@ namespace RPG.Dialogue.Editor
             }
             else
             {
+                ProcessEvents();
+                foreach(DialogueNode node in selectedDialogue.GetAllNodes())        // Separate to fix overlap issues.
+                {
+                    DrawNode(node);
+                }
                 foreach(DialogueNode node in selectedDialogue.GetAllNodes())
                 {
-                    OnGUINode(node);
-                    ProcessEvents();
+                    DrawConnections(node);
                 }
             }
         }
@@ -94,7 +98,7 @@ namespace RPG.Dialogue.Editor
             }
         }
 
-        private void OnGUINode(DialogueNode node)
+        private void DrawNode(DialogueNode node)
         {
             GUILayout.BeginArea(node.rect, nodeStyle);                          // Start node boundary.
 
@@ -110,13 +114,20 @@ namespace RPG.Dialogue.Editor
                 node.nodeID = newID;
             }
 
-            foreach(DialogueNode childNode in selectedDialogue.GetAllChildren(node))
-            {
-                EditorGUILayout.LabelField(childNode.nodeID);
-                EditorGUILayout.LabelField(childNode.nodeText);
-            }
-
             GUILayout.EndArea();                                                   // End node boundary.
+        }
+
+        private void DrawConnections(DialogueNode node)
+        {
+            Vector3 startPos = new Vector2(node.rect.xMax, node.rect.center.y);
+            foreach(DialogueNode child in selectedDialogue.GetAllChildren(node))
+            {
+                Vector3 endPos = new Vector2(child.rect.xMin, child.rect.center.y);
+                Vector3 cpOffset = endPos - startPos;
+                cpOffset.y = 0;
+                cpOffset.x *= 0.8f;
+                Handles.DrawBezier(startPos, endPos, startPos + cpOffset, endPos - cpOffset, Color.white, null, 4f);
+            }
         }
     }
 }
